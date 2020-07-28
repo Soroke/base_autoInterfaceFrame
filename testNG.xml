@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<!--
+parallel="methods" 每个方法都将采用独立的线程进行测试。(这个可以模拟双师多学生同时上课场景)
+parallel="classes" 将把每个<class>标签内的所有方法在同一个线程中执行，但是<classes>中的不同<class>将会以不同的线程执行。
+parallel="instances" TestNg 将把同一个实例内的所有方法运行在同一个线程中，但是如果两个方 法是在不同的实例中，那么他们将会在不同的线程中执行。 -->
+
+<!-- 同时如果测试数据获取方式为DataProvider，需要添加标识parallel=true  例如@DataProvider(name = "cases",parallel=true) 这样才能实现多线程运行测试用例-->
+<suite name="接口测试" verbose="1" parallel="methods" data-provider-thread-count="5">
+    <!-- 测试数据存放地址 
+    <parameter name="mysql_url" value="jdbc:mysql://27.221.58.101:3308/qa_apiframetest?useSSL=true&amp;characterEncoding=UTF-8" />
+    <parameter name="mysql_user" value="root" />
+    <parameter name="mysql_pwd" value="xfDB_xntest.223" />-->
+
+
+    <test name="人人律接口测试">
+        <classes>
+            <class name="net.faxuan.example.MultipleRoundsQuestionAnswer"/>
+        </classes>
+    </test>
+
+</suite>
