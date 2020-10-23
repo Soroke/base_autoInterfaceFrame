@@ -1,6 +1,5 @@
 package net.faxuan.util;
 
-import net.faxuan.exception.CheckException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -37,9 +36,9 @@ public class ExcelUtil {
      * @return
      * @throws Exception
      */
-    public Excel readExcel(String excelPath) throws FileNotFoundException,IOException{
+    public Map<String, Map<Integer, List<String>>> readExcel(String excelPath) throws FileNotFoundException,IOException{
 
-        Excel excel = new Excel();
+//        Excel excel = new Excel();
         //记录所有sheet信息
         Map<String,Map<Integer,List<String>>> sheets = new HashMap<>();
         //读取excel
@@ -51,11 +50,11 @@ public class ExcelUtil {
             Map<Integer,List<String>> she = new HashMap<>();
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {//获取每个Sheet表
                 sheet=workbook.getSheetAt(i);
-                for (int j = 0; j < sheet.getPhysicalNumberOfRows(); j++) {//获取每行
+                for (int j = 0; j < sheet.getLastRowNum(); j++) {//获取每行
                     //记录当前行的信息
                     List<String> line = new ArrayList<>();
                     XSSFRow row=sheet.getRow(j);
-                    for (int k = 0; k < row.getPhysicalNumberOfCells(); k++) {//获取每个单元格
+                    for (int k = 0; k < row.getLastCellNum(); k++) {//获取每个单元格
                         //蒋当前单元格信息记录
                         line.add(getCellStringValue(row.getCell(k)));
 //                        System.out.print(row.getCell(k)+"\t");
@@ -72,11 +71,11 @@ public class ExcelUtil {
             Map<Integer,List<String>> she = new HashMap<>();
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {//获取每个Sheet表
                 sheet=workbook.getSheetAt(i);
-                for (int j = 0; j < sheet.getPhysicalNumberOfRows(); j++) {//获取每行
+                for (int j = 0; j < sheet.getLastRowNum(); j++) {//获取每行
                     //记录当前行的信息
                     List<String> line = new ArrayList<>();
                     HSSFRow row=sheet.getRow(j);
-                    for (int k = 0; k < row.getPhysicalNumberOfCells(); k++) {//获取每个单元格
+                    for (int k = 0; k < row.getLastCellNum(); k++) {//获取每个单元格
 //                        System.out.print(row.getCell(k)+"\t");
                         //蒋当前单元格信息记录
                         line.add(getCellStringValue(row.getCell(k)));
@@ -89,8 +88,8 @@ public class ExcelUtil {
             System.err.println("非excel文件");
         }
 
-        excel.setSheets(sheets);
-        return excel;
+//        excel.setSheets(sheets);
+        return sheets;
 
     }
 
@@ -168,38 +167,36 @@ public class ExcelUtil {
     }
 
 
-
-}
-
 class Excel {
 
-    private Map<String,Map<Integer,List<String>>> sheets;
+        private Map<String, Map<Integer, List<String>>> sheets;
 
-    private Map<Integer,List<String>> calls;
+        private Map<Integer,List<String>> calls;
 
-    public Map<String, Map<Integer, List<String>>> getSheets() {
-        return sheets;
-    }
-
-    public void setSheets(Map<String, Map<Integer, List<String>>> sheets) {
-        this.sheets = sheets;
-    }
-
-    @Override
-    public String toString() {
-        String info = "";
-        for (String key:sheets.keySet()) {
-            info += "sheet名称:" + key + "\t信息如下\n";
-            Map<Integer,List<String>> sheetInfo = sheets.get(key);
-            for (int i=0;i<sheetInfo.size();i++) {
-                List<String> lines = sheetInfo.get(i);
-                for (String word:lines) {
-                    info += word + "\t";
-                }
-                info += "\n";
-            }
+        public Map<String, Map<Integer, List<String>>> getSheets() {
+            return sheets;
         }
-        return info;
+
+        public void setSheets(Map<String, Map<Integer, List<String>>> sheets) {
+            this.sheets = sheets;
+        }
+
+        @Override
+        public String toString() {
+            String info = "";
+            for (String key:sheets.keySet()) {
+                info += "sheet名称:" + key + "\t信息如下\n";
+                Map<Integer,List<String>> sheetInfo = sheets.get(key);
+                for (int i=0;i<sheetInfo.size();i++) {
+                    List<String> lines = sheetInfo.get(i);
+                    for (String word:lines) {
+                        info += word + "\t";
+                    }
+                    info += "\n";
+                }
+            }
+            return info;
+        }
     }
 }
 
